@@ -52,7 +52,7 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (mouseDelta != Vector2.zero) // Only rotate if there's no mouse movement
+        if (mouseDelta != Vector2.zero) // Only rotate if there's mouse movement
         {
             Vector2 scaledMouseDelta = mouseDelta * sensitivity;
             yaw = Mathf.SmoothDamp(yaw, yaw + scaledMouseDelta.x, ref yawVel, 0.1f);
