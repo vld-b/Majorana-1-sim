@@ -6,11 +6,12 @@ using UnityEngine.UIElements;
 
 public class UIActions : MonoBehaviour
 {
+    // Are set in Unity
     public ParticleSystem condensationEffect;
     private ParticleSystem.EmissionModule eModule;
-
     public VerticalLayoutGroup eventLogVerticalGroup;
     public GameObject eventLogMessage;
+    public GameObject qBitsContainer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,6 +43,8 @@ public class UIActions : MonoBehaviour
         eModule.enabled = false;
 
         AddEventMessage("Kühlung abgeschlossen");
+
+        qBitsContainer.SetActive(true);
     }
 
     private IEnumerator SendCoolingMessage()

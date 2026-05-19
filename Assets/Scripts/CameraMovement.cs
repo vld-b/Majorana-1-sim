@@ -8,6 +8,7 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float sensitivity = .4f; // SerializeField lets us adjust value from editor window
 
+    // Are set in unity
     public Transform camRotationTransform;
     public Transform camTransform;
 
