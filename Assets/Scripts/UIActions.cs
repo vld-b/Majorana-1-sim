@@ -9,9 +9,8 @@ public class UIActions : MonoBehaviour
     // Are set in Unity
     public ParticleSystem condensationEffect;
     private ParticleSystem.EmissionModule eModule;
-    public VerticalLayoutGroup eventLogVerticalGroup;
-    public GameObject eventLogMessage;
     public GameObject qBitsContainer;
+    public GameObject vlKorrekteZahl;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,7 +31,7 @@ public class UIActions : MonoBehaviour
 
         StartCoroutine("TurnCondensationOff");
 
-        AddEventMessage("Starten des Quantencomputers...");
+        Tools.AddEventMessage("Starten des Quantencomputers...");
 
         StartCoroutine("SendCoolingMessage");
     }
@@ -42,21 +41,16 @@ public class UIActions : MonoBehaviour
         yield return new WaitForSeconds(10);
         eModule.enabled = false;
 
-        AddEventMessage("Kühlung abgeschlossen");
+        Tools.AddEventMessage("Kühlung abgeschlossen");
 
         qBitsContainer.SetActive(true);
+        vlKorrekteZahl.SetActive(true);
     }
 
     private IEnumerator SendCoolingMessage()
     {
         yield return new WaitForSeconds(1);
 
-        AddEventMessage("Kühlen des Quantencomputers auf 4mK...");
-    }
-
-    private void AddEventMessage(string message)
-    {
-        GameObject newMessage = Instantiate(eventLogMessage, eventLogVerticalGroup.transform);
-        newMessage.GetComponent<TextMeshProUGUI>().text = message;
+        Tools.AddEventMessage("Kühlen des Quantencomputers auf 4mK...");
     }
 }

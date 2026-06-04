@@ -11,7 +11,14 @@ public class QBit : MonoBehaviour
     public float currentAngle { get; private set; } = 0.0f;
     public float superposition
     {
-        get => Mathf.Sin(Mathf.Deg2Rad * currentAngle);
+        get
+        {
+            float reducedAngle = currentAngle % 360.0f;
+            if (reducedAngle >= 0.0f && reducedAngle <= 90.0f)
+                return Mathf.Sin(Mathf.Deg2Rad * currentAngle);
+            else
+                return float.NaN; // If the angle is outside of defined range, return NaN
+        }
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
