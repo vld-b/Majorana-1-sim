@@ -4,12 +4,13 @@ using UnityEngine;
 public static class Tools
 {
     public static GameObject eventLogMessage;
-    public static Transform attachTo;
+    public static RectTransform attachTo;
 
     public static void AddEventMessage(string message)
     {
         GameObject newMessage = GameObject.Instantiate(eventLogMessage, attachTo);
         newMessage.GetComponent<TextMeshProUGUI>().text = message;
+        attachTo.sizeDelta = new Vector2(attachTo.sizeDelta.x, attachTo.sizeDelta.y + newMessage.GetComponent<RectTransform>().sizeDelta.y + 10);
     }
 
     public static char[] byteToBin(byte number)

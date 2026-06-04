@@ -10,11 +10,21 @@ public class Majorana1 : MonoBehaviour
     public UnityEngine.UI.Button btKorrekteZahl;
     public TMP_InputField ifKorrekteZahl;
     public GameObject vlKorrekteZahl;
+    public GameObject btBellZustand;
+    public TMP_Text lbGroverSchritte;
+    public GameObject vlGrover;
+    public GameObject btAuslesen;
 
     public GameObject hoveringTextObject;
     private TextMeshProUGUI hoveringText;
 
-    private byte korrekteZahl = 1;
+    private readonly float initialGroverAngle = Mathf.Asin(Mathf.Pow(2, 8.0f * -0.5f));
+
+    private byte korrekteZahl;
+    private char[] korrekteZahlBin;
+    private int groverStep = 0;
+    private float groverStepSize;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,7 +35,9 @@ public class Majorana1 : MonoBehaviour
             {
                 korrekteZahl = (byte)zahl;
                 vlKorrekteZahl.SetActive(false);
-                Tools.AddEventMessage("Korrekte Zahl gesetzt auf " + korrekteZahl + " mit Binärdarstellung: 0b" + new string(Tools.byteToBin(korrekteZahl)));
+                korrekteZahlBin = Tools.byteToBin(korrekteZahl);
+                Tools.AddEventMessage("Korrekte Zahl gesetzt auf " + korrekteZahl + " mit Binärdarstellung: 0b" + new string(korrekteZahlBin));
+                btBellZustand.SetActive(true);
             }
             else
             {
@@ -50,5 +62,46 @@ public class Majorana1 : MonoBehaviour
     private void OnMouseExit()
     {
         hoveringTextObject.SetActive(false);
+    }
+
+    public void SetzeBellZustand()
+    {
+        for (int i = 0; i < 8; ++i)
+        {
+            qBits[i].leansTowardsZero = korrekteZahlBin[i] == '0';
+            qBits[i].isStateKnown = true;
+            qBits[i].SetSuperposition(45.0f);
+        }
+        Tools.AddEventMessage("Bell-Zustand in allen QBits erzeugt");
+    }
+
+    public void CalculateGroverStepSize()
+    {
+        groverStepSize = initialGroverAngle * Mathf.Rad2Deg;
+    }
+
+    public void GroverStep()
+    {
+        foreach (QBit qBit in qBits)
+            qBit.DoGroverStep(groverStepSize);
+        lbGroverSchritte.text = "Schritt " + ++groverStep + "/12";
+        Tools.AddEventMessage("Grover-Schritt " + groverStep + " ausgeführt");
+
+        if (groverStep >= 12)
+        {
+            vlGrover.SetActive(false);
+            btAuslesen.SetActive(true);
+        }
+    }
+
+    public void MeasureComputer()
+    {
+        foreach (QBit qBit in qBits)
+        {
+            if (Random.Range(0.0f, 1.0f) < qBit.superposition)
+                qBit.SetSuperposition(90.0f);
+            else
+                qBit.SetSuperposition(0.0f);
+        }
     }
 }
