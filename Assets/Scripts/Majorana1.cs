@@ -7,7 +7,6 @@ public class Majorana1 : MonoBehaviour
 {
     // Are set in Unity
     public System.Collections.Generic.List<QBit> qBits;
-    public UnityEngine.UI.Button btKorrekteZahl;
     public TMP_InputField ifKorrekteZahl;
     public GameObject vlKorrekteZahl;
     public GameObject btBellZustand;
@@ -30,22 +29,6 @@ public class Majorana1 : MonoBehaviour
     void Start()
     {
         hoveringText = hoveringTextObject.GetComponent<TextMeshProUGUI>();
-        btKorrekteZahl.onClick.AddListener(() =>
-        {
-            if (int.TryParse(ifKorrekteZahl.text, out int zahl) && 0 <= zahl && zahl < 256)
-            {
-                korrekteZahl = (byte)zahl;
-                vlKorrekteZahl.SetActive(false);
-                korrekteZahlBin = Tools.byteToBin(korrekteZahl);
-                Tools.AddEventMessage("Korrekte Zahl gesetzt auf " + korrekteZahl + " mit Binärdarstellung: 0b" + new string(korrekteZahlBin));
-                btBellZustand.SetActive(true);
-            }
-            else
-            {
-                ifKorrekteZahl.text = "";
-                ifKorrekteZahl.placeholder.GetComponent<TMP_Text>().text = "Nur 0-255 erlaubt";
-            }
-        });
     }
 
     // Update is called once per frame
@@ -63,6 +46,23 @@ public class Majorana1 : MonoBehaviour
     private void OnMouseExit()
     {
         hoveringTextObject.SetActive(false);
+    }
+
+    public void SetKorrekteZahl()
+    {
+        if (int.TryParse(ifKorrekteZahl.text, out int zahl) && 0 <= zahl && zahl < 256)
+        {
+            korrekteZahl = (byte)zahl;
+            vlKorrekteZahl.SetActive(false);
+            korrekteZahlBin = Tools.byteToBin(korrekteZahl);
+            Tools.AddEventMessage("Korrekte Zahl gesetzt auf " + korrekteZahl + " mit Binärdarstellung: 0b" + new string(korrekteZahlBin));
+            btBellZustand.SetActive(true);
+        }
+        else
+        {
+            ifKorrekteZahl.text = "";
+            ifKorrekteZahl.placeholder.GetComponent<TMP_Text>().text = "Nur 0-255 erlaubt";
+        }
     }
 
     public void SetzeBellZustand()
@@ -112,6 +112,6 @@ public class Majorana1 : MonoBehaviour
         for (int i = 0; i < 8; ++i)
             if (measuredNumber[i] != korrekteZahlBin[i])
                 korrekteMessung = false;
-        Tools.AddEventMessage(korrekteMessung ? "Korrekte und ausgelesene Zahl stimmen überein." : "Korrekte und ausgelesene Zahl stimmen nicht überein. Unglückliche Messung!");
+        Tools.AddEventMessage(korrekteMessung ? "Korrekte und ausgelesene Zahl stimmen überein. Messung erfolgreich!" : "Korrekte und ausgelesene Zahl stimmen nicht überein. Unglückliche Messung!");
     }
 }
