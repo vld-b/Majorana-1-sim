@@ -1,16 +1,19 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class Tools
 {
     public static GameObject eventLogMessage;
     public static RectTransform attachTo;
+    public static Scrollbar eventLogScrollbar;
 
     public static void AddEventMessage(string message)
     {
         GameObject newMessage = GameObject.Instantiate(eventLogMessage, attachTo);
         newMessage.GetComponent<TextMeshProUGUI>().text = message;
         attachTo.sizeDelta = new Vector2(attachTo.sizeDelta.x, attachTo.sizeDelta.y + newMessage.GetComponent<RectTransform>().sizeDelta.y + 10);
+        eventLogScrollbar.value = 0.0f;
     }
 
     public static char[] byteToBin(byte number)
