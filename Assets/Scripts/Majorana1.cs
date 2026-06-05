@@ -18,12 +18,13 @@ public class Majorana1 : MonoBehaviour
     public GameObject hoveringTextObject;
     private TextMeshProUGUI hoveringText;
 
-    private readonly float initialGroverAngle = Mathf.Asin(Mathf.Pow(2, 8.0f * -0.5f));
+    private readonly float initialGroverAngle = Mathf.Pow(2, 8.0f * -0.5f);
 
     private byte korrekteZahl;
     private char[] korrekteZahlBin;
     private int groverStep = 0;
     private float groverStepSize;
+    private char[] measuredNumber;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -96,12 +97,21 @@ public class Majorana1 : MonoBehaviour
 
     public void MeasureComputer()
     {
+        measuredNumber = new char[8];
+        for (int i = 0; i < 8; ++i)
+        {
+            measuredNumber[i] = (Random.Range(0.0f, 1.0f) < (qBits[i].superposition * qBits[i].superposition)) ? '1' : '0'; // Compare to square as per state vector
+        }
         foreach (QBit qBit in qBits)
         {
-            if (Random.Range(0.0f, 1.0f) < qBit.superposition)
-                qBit.SetSuperposition(90.0f);
-            else
-                qBit.SetSuperposition(0.0f);
+            qBit.isStateKnown = false;
         }
+        Tools.AddEventMessage("Ausgelesene Zahl: 0b" + new string(measuredNumber) + " im vergleich zur korrekten Zahl: 0b" + new string(korrekteZahlBin));
+
+        bool korrekteMessung = true;
+        for (int i = 0; i < 8; ++i)
+            if (measuredNumber[i] != korrekteZahlBin[i])
+                korrekteMessung = false;
+        Tools.AddEventMessage(korrekteMessung ? "Korrekte und ausgelesene Zahl stimmen überein." : "Korrekte und ausgelesene Zahl stimmen nicht überein. Unglückliche Messung!");
     }
 }
