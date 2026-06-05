@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -11,11 +12,31 @@ public class UIActions : MonoBehaviour
     private ParticleSystem.EmissionModule eModule;
     public GameObject qBitsContainer;
     public GameObject vlKorrekteZahl;
+    public GameObject eventLogObject;
+    public CameraMovement camMovement;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         eModule = condensationEffect.emission;
+
+        EventTrigger trigger = eventLogObject.GetComponent<EventTrigger>();
+        if (!trigger)
+            trigger = eventLogObject.AddComponent<EventTrigger>();
+
+        EventTrigger.Entry entryEnter = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter,
+        };
+        entryEnter.callback.AddListener(_ => camMovement.isVisionLocked = true);
+        trigger.triggers.Add(entryEnter);
+
+        EventTrigger.Entry entryExit = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerExit,
+        };
+        entryExit.callback.AddListener(_ => camMovement.isVisionLocked = false);
+        trigger.triggers.Add(entryExit);
     }
 
     // Update is called once per frame

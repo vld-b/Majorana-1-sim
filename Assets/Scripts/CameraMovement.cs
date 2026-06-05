@@ -18,6 +18,7 @@ public class CameraMovement : MonoBehaviour
 
     private Vector2 mouseDelta = Vector2.zero;
     private Vector2 mouseLockingPos = Vector2.negativeInfinity; // Vector2.zero cannot work becase maybe the cursor must be locked at (0, 0)
+    public bool isVisionLocked = false;
     private bool shouldLook = false;
     private float pitch, pitchVel, yaw, yawVel = 0f;
     private float zoomVal = 0f;
@@ -36,7 +37,7 @@ public class CameraMovement : MonoBehaviour
         // Assign actions to input events
         look.performed += ctx =>
         {
-            if (shouldLook)
+            if (shouldLook && !isVisionLocked)
                 mouseDelta = ctx.ReadValue<Vector2>();
             else
                 mouseDelta = Vector2.zero;
@@ -56,7 +57,8 @@ public class CameraMovement : MonoBehaviour
 
         zoom.performed += ctx =>
         {
-            zoomVal = ctx.ReadValue<Vector2>().y;
+            if (!isVisionLocked)
+                zoomVal = ctx.ReadValue<Vector2>().y;
         };
 
         zoom.canceled += ctx =>
@@ -75,7 +77,7 @@ public class CameraMovement : MonoBehaviour
             pitch = math.clamp(Mathf.SmoothDamp(pitch, pitch - scaledMouseDelta.y, ref pitchVel, .1f), -40f, 80f); // Mathf.SmoothDamp interpolates smoothly
             camRotationTransform.rotation = Quaternion.Euler(0, yaw, pitch);
         }
-        if (shouldLook)
+        if (shouldLook && !isVisionLocked)
             Mouse.current.WarpCursorPosition(mouseLockingPos);
         if (zoomVal > 0f && zoomLevel > 1)
         {
