@@ -13,7 +13,6 @@ public class Majorana1 : MonoBehaviour
     public TMP_Text lbGroverSchritte;
     public GameObject vlGrover;
     public GameObject btAuslesen;
-
     public GameObject hoveringTextObject;
     private TextMeshProUGUI hoveringText;
 
