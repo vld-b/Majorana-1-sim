@@ -14,4 +14,10 @@ public class ToolsLoader : MonoBehaviour
         Tools.attachTo = attachEventMessagesTo;
         Tools.eventLogScrollbar = eventLogScrollbar;
     }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        QualitySettings.vSyncCount = 1; // Prevent excessive CPU/GPU usage
+    }
 }
